@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <netinet/tcp.h>
 #include <netdb.h>
 #include <unistd.h>
 
@@ -90,6 +91,8 @@ Connection::Connection(const std::string& host, int port, const std::string& aut
             error = Error::from_errno("connect");
             continue;
         }
+	int one = 1;
+        setsockopt(guarded_sockfd, SOL_TCP, TCP_NODELAY, &one, sizeof(one));
 
         break;
     }
